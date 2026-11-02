@@ -1,0 +1,14 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {validateData} from '../src/lib/data.ts';
+import {extent,metricColor,ghuColor} from '../src/lib/colors.ts';
+const fixture=()=>JSON.parse(readFileSync('public/data/hospitals.json','utf8'));
+test('checked-in dataset validates',()=>assert.ok(validateData(fixture())));
+test('sourced registry has six groups, linked coordinates and no fabricated measures',()=>{const d=validateData(fixture());assert.equal(d.data_status,'locations');assert.equal(new Set(d.hospitals.map(h=>h.ghu_id)).size,6);for(const h of d.hospitals){assert.ok(h.identity_source?.startsWith('https://www.aphp.fr/'));assert.ok(h.coordinate_source?.startsWith('https://'));assert.ok(!h.name.includes('synthetic'));assert.ok(Object.values(h.metrics).every(v=>v===null));}assert.ok(!d.hospitals.some(h=>/Berck|Hendaye|Paul-Doumer|Salvadour/.test(h.name)));assert.equal(d.hospitals.find(h=>h.id==='APHP_SITE_GEORGES_CLEMENCEAU')?.city,'Champcueil');});
+test('duplicate IDs rejected',()=>{const d=fixture();d.hospitals.push(d.hospitals[0]);assert.throws(()=>validateData(d),/Duplicate/);});
+test('invalid coordinates rejected',()=>{for(const v of [0,NaN,Infinity,51]){const d=fixture();d.hospitals[0].latitude=v;assert.throws(()=>validateData(d),/coordinates/);}});
+test('unknown GHU rejected',()=>{const d=fixture();d.hospitals[0].ghu_id='UNKNOWN';assert.throws(()=>validateData(d),/GHU/);});
+test('missing measures and null accepted',()=>{const d=fixture();d.hospitals[0].metrics={metric_01:null};assert.equal(validateData(d).hospitals[0].metrics.metric_02,undefined);});
+test('non-numeric and unknown measures rejected',()=>{for(const metrics of [{metric_01:'oops'},{metric_01:Infinity},{unknown:3}]){const d=fixture();d.hospitals[0].metrics=metrics;assert.throws(()=>validateData(d),/measure/);}});
+test('continuous scale handles empty, constant, and missing values',()=>{assert.equal(extent([null,undefined]),null);assert.deepEqual(extent([2,9,null,4]),[2,9]);assert.equal(metricColor(null,[2,9]),'#7c858c');assert.notEqual(metricColor(2,[2,9]),metricColor(9,[2,9]));assert.ok(!metricColor(2,[2,2]).includes('NaN'));assert.equal(new Set(Array.from({length:6},(_,i)=>ghuColor(`GHU_${i+1}`))).size,6);});

@@ -1,0 +1,474 @@
+{
+  "updated_at": "2026-11-02",
+  "data_status": "demo",
+  "metric_definitions": [
+    {
+      "key": "metric_01",
+      "label": "Staffed beds",
+      "unit": "beds",
+      "decimals": 0,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_02",
+      "label": "Annual admissions",
+      "unit": "admissions",
+      "decimals": 0,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_03",
+      "label": "Emergency visits",
+      "unit": "visits",
+      "decimals": 0,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_04",
+      "label": "Outpatient visits",
+      "unit": "visits",
+      "decimals": 0,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_05",
+      "label": "Average length of stay",
+      "unit": "days",
+      "decimals": 1,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_06",
+      "label": "Occupancy rate",
+      "unit": "%",
+      "decimals": 1,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_07",
+      "label": "Operating rooms",
+      "unit": "rooms",
+      "decimals": 0,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_08",
+      "label": "Medical workforce",
+      "unit": "FTE",
+      "decimals": 1,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_09",
+      "label": "Nursing workforce",
+      "unit": "FTE",
+      "decimals": 1,
+      "higher_is_better": null
+    },
+    {
+      "key": "metric_10",
+      "label": "Day-case share",
+      "unit": "%",
+      "decimals": 1,
+      "higher_is_better": null
+    }
+  ],
+  "hospitals": [
+    {
+      "id": "DEMO_001",
+      "name": "Aster Hospital (synthetic)",
+      "ghu_id": "GHU_1",
+      "ghu_name": "Example GHU 1",
+      "city": "Example locality 1",
+      "department": "75",
+      "latitude": 48.87,
+      "longitude": 2.32,
+      "metrics": {
+        "metric_01": null,
+        "metric_02": 14000,
+        "metric_03": 22000,
+        "metric_04": 55000,
+        "metric_05": 4.2,
+        "metric_06": 68,
+        "metric_07": 4,
+        "metric_08": 120,
+        "metric_09": 300,
+        "metric_10": 25
+      }
+    },
+    {
+      "id": "DEMO_002",
+      "name": "Birch Hospital (synthetic)",
+      "ghu_id": "GHU_2",
+      "ghu_name": "Example GHU 2",
+      "city": "Example locality 2",
+      "department": "75",
+      "latitude": 48.82,
+      "longitude": 2.38,
+      "metrics": {
+        "metric_01": 223,
+        "metric_02": 14930,
+        "metric_03": 23700,
+        "metric_04": 57800,
+        "metric_05": 4.3,
+        "metric_06": 69,
+        "metric_07": 5,
+        "metric_08": 135,
+        "metric_09": 321,
+        "metric_10": 26.2
+      }
+    },
+    {
+      "id": "DEMO_003",
+      "name": "Cedar Hospital (synthetic)",
+      "ghu_id": "GHU_3",
+      "ghu_name": "Example GHU 3",
+      "city": "Example locality 3",
+      "department": "92",
+      "latitude": 48.92,
+      "longitude": 2.29,
+      "metrics": {
+        "metric_01": 246,
+        "metric_02": 15860,
+        "metric_03": 25400,
+        "metric_04": 60600,
+        "metric_05": 4.4,
+        "metric_06": 70,
+        "metric_07": 6,
+        "metric_08": 150,
+        "metric_09": 342,
+        "metric_10": null
+      }
+    },
+    {
+      "id": "DEMO_004",
+      "name": "Dahlia Hospital (synthetic)",
+      "ghu_id": "GHU_4",
+      "ghu_name": "Example GHU 4",
+      "city": "Example locality 4",
+      "department": "93",
+      "latitude": 48.89,
+      "longitude": 2.43,
+      "metrics": {
+        "metric_01": 269,
+        "metric_02": 16790,
+        "metric_03": 27100,
+        "metric_04": 63400,
+        "metric_05": 4.5,
+        "metric_06": 71,
+        "metric_07": 7,
+        "metric_08": 165,
+        "metric_09": null,
+        "metric_10": 28.6
+      }
+    },
+    {
+      "id": "DEMO_005",
+      "name": "Elm Hospital (synthetic)",
+      "ghu_id": "GHU_5",
+      "ghu_name": "Example GHU 5",
+      "city": "Example locality 5",
+      "department": "94",
+      "latitude": 48.76,
+      "longitude": 2.44,
+      "metrics": {
+        "metric_01": 292,
+        "metric_02": 17720,
+        "metric_03": 28800,
+        "metric_04": 66200,
+        "metric_05": 4.6000000000000005,
+        "metric_06": 72,
+        "metric_07": 8,
+        "metric_08": null,
+        "metric_09": 384,
+        "metric_10": 29.8
+      }
+    },
+    {
+      "id": "DEMO_006",
+      "name": "Fern Hospital (synthetic)",
+      "ghu_id": "GHU_6",
+      "ghu_name": "Example GHU 6",
+      "city": "Example locality 6",
+      "department": "91",
+      "latitude": 48.7,
+      "longitude": 2.27,
+      "metrics": {
+        "metric_01": 315,
+        "metric_02": 18650,
+        "metric_03": 30500,
+        "metric_04": 69000,
+        "metric_05": 4.7,
+        "metric_06": 73,
+        "metric_07": null,
+        "metric_08": 195,
+        "metric_09": 405,
+        "metric_10": 31
+      }
+    },
+    {
+      "id": "DEMO_007",
+      "name": "Ginkgo Hospital (synthetic)",
+      "ghu_id": "GHU_1",
+      "ghu_name": "Example GHU 1",
+      "city": "Example locality 7",
+      "department": "92",
+      "latitude": 48.82,
+      "longitude": 2.14,
+      "metrics": {
+        "metric_01": 338,
+        "metric_02": 19580,
+        "metric_03": 32200,
+        "metric_04": 71800,
+        "metric_05": 4.800000000000001,
+        "metric_06": null,
+        "metric_07": 10,
+        "metric_08": 210,
+        "metric_09": 426,
+        "metric_10": 32.2
+      }
+    },
+    {
+      "id": "DEMO_008",
+      "name": "Hazel Hospital (synthetic)",
+      "ghu_id": "GHU_2",
+      "ghu_name": "Example GHU 2",
+      "city": "Example locality 8",
+      "department": "95",
+      "latitude": 48.96,
+      "longitude": 2.18,
+      "metrics": {
+        "metric_01": 361,
+        "metric_02": 20510,
+        "metric_03": 33900,
+        "metric_04": 74600,
+        "metric_05": null,
+        "metric_06": 75,
+        "metric_07": 11,
+        "metric_08": 225,
+        "metric_09": 447,
+        "metric_10": 33.4
+      }
+    },
+    {
+      "id": "DEMO_009",
+      "name": "Iris Hospital (synthetic)",
+      "ghu_id": "GHU_3",
+      "ghu_name": "Example GHU 3",
+      "city": "Example locality 9",
+      "department": "77",
+      "latitude": 48.81,
+      "longitude": 2.58,
+      "metrics": {
+        "metric_01": 384,
+        "metric_02": 21440,
+        "metric_03": 35600,
+        "metric_04": null,
+        "metric_05": 5,
+        "metric_06": 76,
+        "metric_07": 12,
+        "metric_08": 240,
+        "metric_09": 468,
+        "metric_10": 34.6
+      }
+    },
+    {
+      "id": "DEMO_010",
+      "name": "Juniper Hospital (synthetic)",
+      "ghu_id": "GHU_4",
+      "ghu_name": "Example GHU 4",
+      "city": "Example locality 10",
+      "department": "78",
+      "latitude": 48.79,
+      "longitude": 2.04,
+      "metrics": {
+        "metric_01": 407,
+        "metric_02": 22370,
+        "metric_03": null,
+        "metric_04": 80200,
+        "metric_05": 5.1000000000000005,
+        "metric_06": 77,
+        "metric_07": 13,
+        "metric_08": 255,
+        "metric_09": 489,
+        "metric_10": 35.8
+      }
+    },
+    {
+      "id": "DEMO_011",
+      "name": "Laurel Hospital (synthetic)",
+      "ghu_id": "GHU_5",
+      "ghu_name": "Example GHU 5",
+      "city": "Example locality 11",
+      "department": "93",
+      "latitude": 48.94,
+      "longitude": 2.39,
+      "metrics": {
+        "metric_01": 430,
+        "metric_02": null,
+        "metric_03": 39000,
+        "metric_04": 83000,
+        "metric_05": 5.2,
+        "metric_06": 78,
+        "metric_07": 14,
+        "metric_08": 270,
+        "metric_09": 510,
+        "metric_10": 37
+      }
+    },
+    {
+      "id": "DEMO_012",
+      "name": "Maple Hospital (synthetic)",
+      "ghu_id": "GHU_6",
+      "ghu_name": "Example GHU 6",
+      "city": "Example locality 12",
+      "department": "75",
+      "latitude": 48.85,
+      "longitude": 2.28,
+      "metrics": {
+        "metric_01": null,
+        "metric_02": 24230,
+        "metric_03": 40700,
+        "metric_04": 85800,
+        "metric_05": 5.300000000000001,
+        "metric_06": 79,
+        "metric_07": 15,
+        "metric_08": 285,
+        "metric_09": 531,
+        "metric_10": 38.2
+      }
+    },
+    {
+      "id": "DEMO_013",
+      "name": "Olive Hospital (synthetic)",
+      "ghu_id": "GHU_1",
+      "ghu_name": "Example GHU 1",
+      "city": "Example locality 13",
+      "department": "94",
+      "latitude": 48.73,
+      "longitude": 2.52,
+      "metrics": {
+        "metric_01": 476,
+        "metric_02": 25160,
+        "metric_03": 42400,
+        "metric_04": 88600,
+        "metric_05": 5.4,
+        "metric_06": 80,
+        "metric_07": 16,
+        "metric_08": 300,
+        "metric_09": 552,
+        "metric_10": 39.4
+      }
+    },
+    {
+      "id": "DEMO_014",
+      "name": "Pine Hospital (synthetic)",
+      "ghu_id": "GHU_2",
+      "ghu_name": "Example GHU 2",
+      "city": "Example locality 14",
+      "department": "95",
+      "latitude": 48.99,
+      "longitude": 2.32,
+      "metrics": {
+        "metric_01": 499,
+        "metric_02": 26090,
+        "metric_03": 44100,
+        "metric_04": 91400,
+        "metric_05": 5.5,
+        "metric_06": 81,
+        "metric_07": 17,
+        "metric_08": 315,
+        "metric_09": 573,
+        "metric_10": null
+      }
+    },
+    {
+      "id": "DEMO_015",
+      "name": "Willow Hospital (synthetic)",
+      "ghu_id": "GHU_3",
+      "ghu_name": "Example GHU 3",
+      "city": "Example locality 15",
+      "department": "91",
+      "latitude": 48.68,
+      "longitude": 2.4,
+      "metrics": {
+        "metric_01": 522,
+        "metric_02": 27020,
+        "metric_03": 45800,
+        "metric_04": 94200,
+        "metric_05": 5.6000000000000005,
+        "metric_06": 82,
+        "metric_07": 18,
+        "metric_08": 330,
+        "metric_09": null,
+        "metric_10": 41.8
+      }
+    },
+    {
+      "id": "DEMO_016",
+      "name": "Yew Hospital (synthetic)",
+      "ghu_id": "GHU_4",
+      "ghu_name": "Example GHU 4",
+      "city": "Example locality 16",
+      "department": "77",
+      "latitude": 48.87,
+      "longitude": 2.69,
+      "metrics": {
+        "metric_01": 545,
+        "metric_02": 27950,
+        "metric_03": 47500,
+        "metric_04": 97000,
+        "metric_05": 5.7,
+        "metric_06": 83,
+        "metric_07": 19,
+        "metric_08": null,
+        "metric_09": 615,
+        "metric_10": 43
+      }
+    },
+    {
+      "id": "DEMO_017",
+      "name": "Zinnia Hospital (synthetic)",
+      "ghu_id": "GHU_5",
+      "ghu_name": "Example GHU 5",
+      "city": "Example locality 17",
+      "department": "78",
+      "latitude": 48.91,
+      "longitude": 1.93,
+      "metrics": {
+        "metric_01": 568,
+        "metric_02": 28880,
+        "metric_03": 49200,
+        "metric_04": 99800,
+        "metric_05": 5.800000000000001,
+        "metric_06": 84,
+        "metric_07": null,
+        "metric_08": 360,
+        "metric_09": 636,
+        "metric_10": 44.2
+      }
+    },
+    {
+      "id": "DEMO_018",
+      "name": "Acacia Hospital (synthetic)",
+      "ghu_id": "GHU_6",
+      "ghu_name": "Example GHU 6",
+      "city": "Example locality 18",
+      "department": "94",
+      "latitude": 48.84,
+      "longitude": 2.48,
+      "metrics": {
+        "metric_01": 591,
+        "metric_02": 29810,
+        "metric_03": 50900,
+        "metric_04": 102600,
+        "metric_05": 5.9,
+        "metric_06": null,
+        "metric_07": 21,
+        "metric_08": 375,
+        "metric_09": 657,
+        "metric_10": 45.4
+      }
+    }
+  ]
+}

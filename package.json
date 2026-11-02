@@ -1,0 +1,29 @@
+{
+  "name": "idf-hospital-explorer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "import:csv": "node --experimental-strip-types scripts/import-csv.ts",
+    "sync:sheet": "node --experimental-strip-types scripts/sync-sheet.mjs",
+    "export:sheet": "node --experimental-strip-types scripts/export-sheet.mjs"
+  },
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "maplibre-gl": "^5.12.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.0",
+    "vite": "^7.0.0"
+  }
+}

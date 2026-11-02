@@ -1,0 +1,10 @@
+import {readFileSync,writeFileSync,renameSync} from 'node:fs';
+import {validateData} from '../src/lib/data.ts';
+import {mergeSheetCsv} from '../src/lib/sheet.ts';
+const path=process.argv[2];
+if(!path)throw Error('Usage: npm run import:csv -- path/to/export.csv');
+const target='public/data/hospitals.json';
+const previous=validateData(JSON.parse(readFileSync(target,'utf8')));
+const result=mergeSheetCsv(readFileSync(path,'utf8'),previous);
+writeFileSync(target+'.tmp',JSON.stringify(result,null,2)+'\n');renameSync(target+'.tmp',target);
+console.log(`Validated and imported ${result.hospitals.length} sites. Commit the dataset and deploy to publish.`);
