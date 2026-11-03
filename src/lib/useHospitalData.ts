@@ -1,22 +1,31 @@
 import {useEffect, useState} from 'react';
-import {validateData, type Dataset} from './data';
-import {fetchSheet} from './sheet';
+import {validateData, type Dataset} from './data.ts';
+import {fetchSheet} from './sheet.ts';
 
 export const sheetPollInterval = 60_000;
 type SheetStatus = {state: 'disabled' | 'checking' | 'connected' | 'stale'; lastChecked: Date | null; message?: string};
+
+export function normalizeSheetUrl(input: string): string {
+  const trimmed = (input || '').trim().split('#')[0];
+  const editMatch = trimmed.match(/^https:\/\/docs\.google\.com\/spreadsheets\/d\/([A-Za-z0-9_-]+)\/(?:edit|view)(?:\?.*)?$/);
+  if (editMatch) {
+    return `https://docs.google.com/spreadsheets/d/${editMatch[1]}/export?format=csv`;
+  }
+  return trimmed;
+}
 
 function getInitialSheetUrl(): string {
   if (typeof window !== 'undefined') {
     try {
       const searchParam = new URLSearchParams(window.location.search).get('sheet');
-      if (searchParam) return searchParam.trim();
+      if (searchParam) return normalizeSheetUrl(searchParam);
       const stored = localStorage.getItem('hospital_sheet_url');
-      if (stored) return stored.trim();
+      if (stored) return normalizeSheetUrl(stored);
     } catch {
       // Ignore storage/security restrictions
     }
   }
-  return (import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || '').trim();
+  return normalizeSheetUrl(import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || '');
 }
 
 export function useHospitalData() {
@@ -27,12 +36,12 @@ export function useHospitalData() {
   const [sheetUrl, setSheetUrlState] = useState<string>(getInitialSheetUrl);
 
   const setSheetUrl = (newUrl: string) => {
-    const trimmed = newUrl.trim();
-    setSheetUrlState(trimmed);
+    const normalized = normalizeSheetUrl(newUrl);
+    setSheetUrlState(normalized);
     if (typeof window !== 'undefined') {
       try {
-        if (trimmed) {
-          localStorage.setItem('hospital_sheet_url', trimmed);
+        if (normalized) {
+          localStorage.setItem('hospital_sheet_url', normalized);
         } else {
           localStorage.removeItem('hospital_sheet_url');
         }

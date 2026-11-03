@@ -73,10 +73,11 @@ export function publishedSheetUrl(input: string): string {
   } catch {
     throw new Error('Use the published Google Sheet CSV URL');
   }
+  const isPubCsv = /^\/spreadsheets\/d\/(?:e\/)?[A-Za-z0-9_-]+\/pub$/.test(url.pathname) && url.searchParams.get('output') === 'csv';
+  const isExportCsv = /^\/spreadsheets\/d\/[A-Za-z0-9_-]+\/export$/.test(url.pathname) && url.searchParams.get('format') === 'csv';
+
   if (url.protocol !== 'https:' || url.hostname !== 'docs.google.com' || url.port ||
-      url.username || url.password ||
-      !/^\/spreadsheets\/d\/(?:e\/)?[A-Za-z0-9_-]+\/pub$/.test(url.pathname) ||
-      url.searchParams.get('output') !== 'csv') {
+      url.username || url.password || (!isPubCsv && !isExportCsv)) {
     throw new Error('Use File > Share > Publish to web > CSV, then copy the published URL');
   }
   return url.href;
