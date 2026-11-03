@@ -66,9 +66,15 @@ export function mergeSheetCsv(csv: string, registry: Dataset): Dataset {
 
 export function publishedSheetUrl(input: string): string {
   let url: URL;
-  try { url = new URL(input); } catch { throw new Error('Use the published Google Sheet CSV URL'); }
+  try {
+    // Strip trailing hash fragment before parsing, as users often copy #gid=... from browser
+    const cleanInput = input.trim().split('#')[0];
+    url = new URL(cleanInput);
+  } catch {
+    throw new Error('Use the published Google Sheet CSV URL');
+  }
   if (url.protocol !== 'https:' || url.hostname !== 'docs.google.com' || url.port ||
-      url.username || url.password || url.hash ||
+      url.username || url.password ||
       !/^\/spreadsheets\/d\/(?:e\/)?[A-Za-z0-9_-]+\/pub$/.test(url.pathname) ||
       url.searchParams.get('output') !== 'csv') {
     throw new Error('Use File > Share > Publish to web > CSV, then copy the published URL');

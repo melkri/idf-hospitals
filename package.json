@@ -10,7 +10,8 @@
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "import:csv": "node --experimental-strip-types scripts/import-csv.ts",
     "sync:sheet": "node --experimental-strip-types scripts/sync-sheet.mjs",
-    "export:sheet": "node --experimental-strip-types scripts/export-sheet.mjs"
+    "export:sheet": "node --experimental-strip-types scripts/export-sheet.mjs",
+    "generate:example": "node scripts/generate-example-sheet.mjs"
   },
   "dependencies": {
     "csv-parse": "^6.1.0",

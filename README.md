@@ -28,30 +28,47 @@ Top-level fields: `updated_at` (ISO date), `data_status` (`demo`, `locations` or
 
 Validation rejects duplicate IDs, inconsistent group names, unknown groups, unsupported departments, non-numeric values, unknown measures and coordinates outside the regional bounding box (latitude 48.1–49.25, longitude 1.4–3.6). The bounding box is a sanity check; verify actual regional boundaries and site coordinates separately. Runtime validation also runs before the UI displays data.
 
-## Maintain through one Google Sheet
+## Google Sheets Integration & Live Updates
 
-Phase 1 is a manual, validated import. Start from the verified JSON registry above. Use one row per site and these exact CSV headers:
+You can maintain and update hospital measures using a single Google Sheet without writing code or rebuilding the website.
 
-```csv
-id,name,ghu_id,ghu_name,city,department,latitude,longitude,metric_01,metric_02,metric_03,metric_04,metric_05,metric_06,metric_07,metric_08,metric_09,metric_10
-```
+### 1. Template & Example Files
+- **Blank Template**: `public/data/sheet-template.csv` contains the exact 37 sourced hospital rows with their official IDs, names, GHU, departments, and coordinates.
+- **Example with Data**: `public/data/example-sheet.csv` contains realistic sample measures for all 37 hospitals, ready to import and test immediately.
 
-Use the actual metric keys from `metric_definitions` if changed. Keep IDs and department codes as text; numbers use a decimal point and no thousands separators. Leave unavailable metric cells blank or use `null`. CSV quoting supports commas and line breaks in names. Every metric column must exist.
+### 2. Setting Up Your Google Sheet
+1. Create a new Google Sheet.
+2. In Google Sheets, click **File → Import → Upload**, and select either `sheet-template.csv` or `example-sheet.csv`.
+3. Protect the static columns (`id` through `longitude`) so collaborators only edit the measure columns (`metric_01` to `metric_10`) and `updated_at`.
+4. Enter numbers with decimal points (no commas or currency symbols). Leave unavailable metrics blank or type `null`.
 
-1. Copy static fields from the authoritative JSON registry into the sheet and protect those columns. Edit only measure columns during routine maintenance.
-2. Download the sheet as CSV (File → Download → Comma-separated values).
-3. Run `npm run import:csv -- path/to/export.csv` from the repository root.
-4. Run `npm test` and `npm run build`; inspect the diff, commit the changed JSON, and push to `main`.
+### 3. Publishing the Google Sheet as CSV
+To make the sheet accessible to the live dashboard:
+1. In Google Sheets, go to **File → Share → Publish to web**.
+2. Under "Link", choose your tab (e.g. "Sheet1") and change the format dropdown from "Web page" to **Comma-separated values (.csv)**.
+3. Click **Publish** (or Republish) and copy the generated link (e.g. `https://docs.google.com/spreadsheets/d/e/.../pub?output=csv`).
 
-The importer requires the same row count and known IDs, rejects duplicates and changed static metadata, validates all values, then atomically replaces the dataset. On validation failure it leaves the previous JSON untouched. New sites or corrected static metadata require an explicit registry review and JSON update first. Successful import sets the update date; edits appear publicly only after successful deployment. Optional scheduled Sheets fetching is deliberately outside this Phase 1 MVP.
+### 4. Updating the Link in the App
+You can connect your Google Sheet in three simple ways:
+- **Directly in the Web UI (Fastest)**: Click the **Connect** / **Edit link** button on the sheet status badge in the app header. Paste your published CSV link and click **Save & Connect**. It connects immediately and saves to your browser!
+- **Via URL Parameter**: Append `?sheet=<published_url>` to your website URL (e.g. `https://your-user.github.io/idf-hospitals/?sheet=https://docs.google.com/spreadsheets/d/e/.../pub?output=csv`) to test or share a direct view.
+- **Permanent Deployment Default**: In your GitHub repository, go to **Settings → Secrets and variables → Actions → Variables**, add `GOOGLE_SHEET_CSV_URL` with your published CSV link, and re-run the deployment workflow. Every visitor will automatically see your live sheet data!
 
-Use only aggregated, public, non-sensitive information. A published-to-web CSV is public to anyone with its URL. Never publish patient data, private credentials or sensitive measures. For a private source, retain the manual download process or design a separate secure ingestion process; never add private tokens to frontend code.
+### Manual Offline CSV Import (Optional)
+If you prefer not to publish to the web:
+1. Download your edited sheet as CSV (File → Download → Comma-separated values).
+2. Run `npm run import:csv -- path/to/export.csv`.
+3. Commit `public/data/hospitals.json` and push to GitHub.
 
-## GitHub Pages
+## GitHub Pages Deployment
 
-Push this repository to GitHub with a `main` branch. In Settings → Pages → Build and deployment, select **GitHub Actions**. The included workflow runs validation tests and builds, then uses the official configure-pages, upload-pages-artifact and deploy-pages actions. GitHub's environment or organization policy may require an owner to enable Pages or approve the first deployment.
-
-The default Vite base is `/idf-hospitals/`. The Action gets the actual Pages base path from configure-pages. For a custom domain, set repository variable `VITE_BASE_PATH` to an empty string (the resulting path is `/`); for a different project path use `/project-name` without the trailing slash. For local builds, set environment variable `VITE_BASE_PATH` to `/` or `/project-name/`. Do not serve a project build at the root without rebuilding with the matching base.
+1. Push this repository to GitHub on branch `main`.
+2. Go to **Settings → Pages** in your repository.
+3. Under **Build and deployment > Source**, select **GitHub Actions** (not "Deploy from a branch").
+4. Under **Settings → Secrets and variables → Actions → Variables**, optionally add:
+   - `GOOGLE_SHEET_CSV_URL`: your published Google Sheet CSV URL.
+   - `VITE_BASE_PATH`: only needed if you use a custom domain (set to `/`) or different repo name.
+5. Pushing to `main` or clicking **Actions → Deploy hospital explorer → Run workflow** automatically tests, builds, and deploys the dashboard.
 
 ## Basemap and attribution
 
