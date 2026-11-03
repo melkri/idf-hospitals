@@ -15,16 +15,30 @@ export function normalizeSheetUrl(input: string): string {
   return trimmed;
 }
 
+function getTargetUrl(): string {
+  if (typeof window !== 'undefined') {
+    try {
+      const param = new URLSearchParams(window.location.search).get('sheet');
+      if (param) return normalizeSheetUrl(param);
+    } catch {
+      // ignore
+    }
+  }
+  return normalizeSheetUrl(import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_URL || '');
+}
+
 export function useHospitalData() {
   const [registry, setRegistry] = useState<Dataset | null>(null);
   const [data, setData] = useState<Dataset | null>(null);
   const [error, setError] = useState('');
-  const [sheet, setSheet] = useState<SheetStatus>({state: 'disabled', lastChecked: null});
+  const url = getTargetUrl();
+  const [sheet, setSheet] = useState<SheetStatus>({
+    state: url ? 'checking' : 'disabled',
+    lastChecked: null
+  });
 
   useEffect(() => {
     const controller = new AbortController();
-    const configuredUrl = (import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || GOOGLE_SHEET_URL || '').trim();
-    const url = normalizeSheetUrl(configuredUrl);
     let busy = false;
     let baseline: Dataset;
     let timer: ReturnType<typeof setInterval> | undefined;
