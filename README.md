@@ -48,11 +48,17 @@ To make the sheet accessible to the live dashboard:
 2. Under "Link", choose your tab (e.g. "Sheet1") and change the format dropdown from "Web page" to **Comma-separated values (.csv)**.
 3. Click **Publish** (or Republish) and copy the generated link (e.g. `https://docs.google.com/spreadsheets/d/e/.../pub?output=csv`).
 
-### 4. Updating the Link in the App
-You can connect your Google Sheet in three simple ways:
-- **Directly in the Web UI (Fastest)**: Click the **Connect** / **Edit link** button on the sheet status badge in the app header. Paste your published CSV link and click **Save & Connect**. It connects immediately and saves to your browser!
-- **Via URL Parameter**: Append `?sheet=<published_url>` to your website URL (e.g. `https://your-user.github.io/idf-hospitals/?sheet=https://docs.google.com/spreadsheets/d/e/.../pub?output=csv`) to test or share a direct view.
-- **Permanent Deployment Default**: In your GitHub repository, go to **Settings → Secrets and variables → Actions → Variables**, add `GOOGLE_SHEET_CSV_URL` with your published CSV link, and re-run the deployment workflow. Every visitor will automatically see your live sheet data!
+### 4. Updating the Google Sheet Link in Code
+
+For security and data integrity, visitors cannot change the Google Sheet source from the UI. The authoritative link is configured directly in the code:
+
+1. Open `src/config.ts`.
+2. Set `GOOGLE_SHEET_URL` to your Google Sheet URL:
+   ```ts
+   export const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1N49kvSXPxwtDI_5RnKHm8pJpemnHjShai8-r78gl7oE/edit?usp=sharing';
+   ```
+   *(Both standard sharing links `/edit?usp=sharing` and published CSV links are supported).*
+3. Commit and push to `main`. GitHub Actions will automatically deploy the update.
 
 ### Manual Offline CSV Import (Optional)
 If you prefer not to publish to the web:
