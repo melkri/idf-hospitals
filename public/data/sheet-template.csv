@@ -1,4 +1,4 @@
-"id","name","ghu_id","ghu_name","city","department","latitude","longitude","metric_01","metric_02","metric_03","metric_04","metric_05","metric_06","metric_07","metric_08","metric_09","metric_10","updated_at"
+"id","name","ghu_id","ghu_name","city","department","latitude","longitude","Staffed beds","Annual admissions","Emergency visits","Outpatient visits","Average length of stay","Occupancy rate","Operating rooms","Medical workforce","Nursing workforce","Day-case share","updated_at"
 "APHP_SITE_ALBERT_CHENEVIER","Hôpital Albert-Chenevier","GHU_2","AP-HP. Hôpitaux universitaires Henri-Mondor","Créteil","94","48.788611","2.458889","","","","","","","","","","","2026-11-02"
 "APHP_SITE_AMBROISE_PARE","Hôpital Ambroise-Paré","GHU_4","AP-HP. Université Paris-Saclay","Boulogne-Billancourt","92","48.849167","2.235556","","","","","","","","","","","2026-11-02"
 "APHP_SITE_ANTOINE_BECLERE","Hôpital Antoine-Béclère","GHU_4","AP-HP. Université Paris-Saclay","Clamart","92","48.788056","2.254722","","","","","","","","","","","2026-11-02"

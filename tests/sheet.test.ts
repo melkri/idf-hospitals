@@ -102,3 +102,13 @@ test('HTTP, HTML, invalid CSV and network failures do not mutate the last valid 
     assert.equal(JSON.stringify(data), before);
   }
 });
+
+test('accepts human-readable aggregate names directly from CSV column headers', () => {
+  const data = registry();
+  const csv = exportSheetCsv(data)
+    .replace('"metric_01"', '"Staffed beds"')
+    .replace('"metric_02"', '"Annual admissions"');
+  const merged = mergeSheetCsv(csv, data);
+  assert.equal(merged.metric_definitions[0].label, 'Staffed beds');
+  assert.equal(merged.metric_definitions[1].label, 'Annual admissions');
+});

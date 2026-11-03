@@ -1,5 +1,5 @@
 import {parse} from 'csv-parse/browser/esm/sync';
-import {validateData, type Dataset} from './data.ts';
+import {validateData, type Dataset, type Metric} from './data.ts';
 
 export const sheetColumns = ['id', 'name', 'ghu_id', 'ghu_name', 'city', 'department', 'latitude', 'longitude'] as const;
 const numericPattern = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
@@ -16,13 +16,62 @@ function numericCell(raw: string, label: string): number {
 export function mergeSheetCsv(csv: string, registry: Dataset): Dataset {
   validateData(registry);
   if (csv.length > maxCsvLength) throw new Error('CSV exceeds the 2 MB limit');
-  const required = [...sheetColumns, ...registry.metric_definitions.map(m => m.key)];
-  const allowed = new Set([...required, 'updated_at', 'address']);
+  
+  const defByKey = new Map(registry.metric_definitions.map(m => [m.key, m]));
+  const defByLabel = new Map(registry.metric_definitions.map(m => [m.label.toLowerCase().trim(), m]));
+  const metaColumns = new Set([...sheetColumns, 'updated_at', 'address']);
+  let activeMetrics: { header: string; key: string; definition: Metric }[] = [];
+
   const rows = parse(csv, {
     columns(headers: string[]) {
       if (new Set(headers).size !== headers.length) throw new Error('Duplicate CSV columns');
-      for (const key of required) if (!headers.includes(key)) throw new Error(`Missing CSV column: ${key}`);
-      for (const key of headers) if (!allowed.has(key)) throw new Error(`Unknown CSV column: ${key}`);
+      if (headers.some(h => !h.trim())) throw new Error('Empty CSV column header');
+
+      for (const key of sheetColumns) {
+        if (!headers.includes(key)) throw new Error(`Missing CSV column: ${key}`);
+      }
+
+      for (const h of headers) {
+        if (/^metric_\d+$/i.test(h) && !defByKey.has(h)) {
+          throw new Error(`Unknown CSV column: ${h}`);
+        }
+      }
+
+      const nonMeta = headers.filter(h => !metaColumns.has(h));
+      const usesMetricKeys = nonMeta.some(h => /^metric_\d+$/i.test(h));
+
+      if (usesMetricKeys) {
+        for (const m of registry.metric_definitions) {
+          if (!headers.includes(m.key) && !headers.includes(m.label)) {
+            throw new Error(`Missing CSV column: ${m.key}`);
+          }
+        }
+      }
+
+      activeMetrics = nonMeta.map(header => {
+        const byKey = defByKey.get(header);
+        if (byKey) return { header, key: byKey.key, definition: byKey };
+        const byLabel = defByLabel.get(header.toLowerCase().trim());
+        if (byLabel) {
+          return {
+            header,
+            key: header,
+            definition: { ...byLabel, key: header, label: header }
+          };
+        }
+        return {
+          header,
+          key: header,
+          definition: {
+            key: header,
+            label: header,
+            unit: '',
+            decimals: 1,
+            higher_is_better: null
+          }
+        };
+      });
+
       return headers;
     },
     skip_empty_lines: true,
@@ -30,12 +79,14 @@ export function mergeSheetCsv(csv: string, registry: Dataset): Dataset {
     trim: true,
     max_record_size: 50_000,
   }) as Record<string, string>[];
+
   if (rows.length !== registry.hospitals.length) {
     throw new Error('Row count changed: review the authoritative site registry first');
   }
   const sites = new Map(registry.hospitals.map(site => [site.id, site]));
   const imported = new Map<string, Record<string, number | null>>();
   const dates = new Set<string>();
+
   for (const row of rows) {
     const site = sites.get(row.id);
     if (!site) throw new Error(`Unknown site ID: ${row.id}`);
@@ -49,17 +100,23 @@ export function mergeSheetCsv(csv: string, registry: Dataset): Dataset {
     }
     if ('address' in row && row.address !== site.address) throw new Error(`Address mismatch: ${row.id}`);
     if ('updated_at' in row) dates.add(row.updated_at);
-    imported.set(row.id, Object.fromEntries(registry.metric_definitions.map(metric => {
-      const raw = row[metric.key];
-      return [metric.key, raw === '' || raw === 'null' ? null : numericCell(raw, `${row.id} ${metric.key}`)];
+    imported.set(row.id, Object.fromEntries(activeMetrics.map(m => {
+      const raw = row[m.header];
+      return [m.key, raw === '' || raw === 'null' || raw === undefined ? null : numericCell(raw, `${row.id} ${m.header}`)];
     })));
   }
+
   if (dates.size > 1) throw new Error('Use the same updated_at date on every row');
   const updated_at = dates.size ? [...dates][0] : registry.updated_at;
-  // Preserve registry order, even when the sheet is sorted differently.
+
+  const resultMetricDefs = activeMetrics.length > 0
+    ? activeMetrics.map(m => m.definition)
+    : registry.metric_definitions;
+
   return validateData({
     ...registry,
     updated_at,
+    metric_definitions: resultMetricDefs,
     hospitals: registry.hospitals.map(site => ({...site, metrics: imported.get(site.id)!})),
   });
 }
